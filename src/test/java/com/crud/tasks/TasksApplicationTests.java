@@ -2,6 +2,8 @@ package com.crud.tasks;
 
 import com.crud.tasks.domain.Item;
 import com.crud.tasks.domain.Task;
+import com.crud.tasks.domain.TaskItemDto;
+import com.crud.tasks.repository.TaskItemRepository;
 import com.crud.tasks.service.DbService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +24,24 @@ public class TasksApplicationTests {
 
     @Autowired
     private DbService service;
+
+    @Autowired
+    private TaskItemRepository taskItemRepository;
+
+
+    @Test
+    public void taskItemRepositoryTest() {
+
+        //Given
+
+        //When
+        List<TaskItemDto> TaskItemDtos =  taskItemRepository.retrieveTasksItemDto();
+
+        for(TaskItemDto taskDto : TaskItemDtos){
+            System.out.println(taskDto.getName() + " " + taskDto.getQuantity());
+        }
+
+    }
 
     @Test
 	public void TaskShopping() {
@@ -54,13 +74,6 @@ public class TasksApplicationTests {
         for (Tuple task: retrieveTasksFromQuery){
             System.out.println(task.get(0));
         }*/
-
-
-
-
-
-
-
 
 	}
 
