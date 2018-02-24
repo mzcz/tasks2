@@ -5,13 +5,14 @@ import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskItemDto;
 import com.crud.tasks.repository.TaskItemRepository;
 import com.crud.tasks.service.DbService;
+import com.mysema.query.Tuple;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.Tuple;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,44 +39,28 @@ public class TasksApplicationTests {
         List<TaskItemDto> TaskItemDtos =  taskItemRepository.retrieveTasksItemDto();
 
         for(TaskItemDto taskDto : TaskItemDtos){
-            System.out.println(taskDto.getName() + " " + taskDto.getQuantity());
+            System.out.println(taskDto.getId() + " " + taskDto.getName() + " " + taskDto.getQuantity());
         }
+
+
 
     }
 
     @Test
-	public void TaskShopping() {
+    public void taskItemRepositoryTest2() {
 
-	    //Given
-/*
-        List<Item> items = new ArrayList<>();
-        Task task = new Task(null,"zakupy","jajka, masło, ser",now(),items);
-
-        Item item1  = new Item (null ,new BigDecimal(2.50), 2, new BigDecimal(5.00), null );
-        Item item2  = new Item (null,new BigDecimal(4.50), 4, new BigDecimal(18.00), null);
-        Item item3  = new Item (null,new BigDecimal(1.50), 1, new BigDecimal(1.50), null);
-
-        item1.setTask(task);
-        item2.setTask(task);
-        item3.setTask(task);
-
-        service.save(task);
-        service.save(item1);
-        service.save(item2);
-        service.save(item3);*/
+        //Given
 
         //When
-        List<Tuple> retrieveTasksFromQuery = service.retrieveTasksFromQuery();
+        List<TaskItemDto> TaskItemDtos =  taskItemRepository.retrieveTasksItemDto2();
+
+        for(TaskItemDto taskDto : TaskItemDtos){
+            System.out.println("Moje Dane " + taskDto.getId() + " " + taskDto.getName() + " " + taskDto.getQuantity());
+        }
 
 
-        //Then
-        System.out.println(retrieveTasksFromQuery.size() +"");
-/*
-        for (Tuple task: retrieveTasksFromQuery){
-            System.out.println(task.get(0));
-        }*/
+    }
 
-	}
 
 
 }

@@ -1,6 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '2.0.0.M7'
+		generatedSourcesDir = file("src/main/generated")
 	}
 	repositories {
 		mavenCentral()
@@ -12,10 +13,19 @@ buildscript {
 	}
 }
 
+
+
+
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+
+jar {
+	baseName = 'gs-accessing-data-jpa'
+	version =  '0.1.0'
+}
 
 group = 'com.crud'
 version = '0.0.1-SNAPSHOT'
@@ -28,6 +38,18 @@ repositories {
 }
 
 
+sourceSets {
+	main {
+		java {
+			srcDir "src/main/java"
+			srcDir generatedSourcesDir
+		}
+	}
+}
+configurations {
+	querydslapt
+}
+
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -35,5 +57,33 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 	compile group: 'commons-dbutils', name: 'commons-dbutils', version: '1.5'
+	compile  "com.mysema.querydsl:querydsl-core:3.7.4"
+	compile  "com.mysema.querydsl:querydsl-jpa:3.7.4"
+	querydslapt  "com.mysema.querydsl:querydsl-apt:3.7.4"
 
 }
+
+configurations {
+	querydslapt
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+	source = sourceSets.main.java
+	classpath = configurations.compile + configurations.querydslapt
+	options.compilerArgs = [
+			"-proc:only",
+			"-processor", "com.mysema.query.apt.jpa.JPAAnnotationProcessor"
+	]
+	destinationDir = generatedSourcesDir
+}
+compileJava {
+	doFirst {
+		generatedSourcesDir.mkdirs();
+	}
+	options.compilerArgs += ['-s', generatedSourcesDir]
+
+	dependsOn generateQueryDSL
+}
+
+
+

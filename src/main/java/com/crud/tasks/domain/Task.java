@@ -38,11 +38,6 @@ public class Task {
         @Column(name="data")
         private LocalDate createData;
 
-        @OneToMany(
-                targetEntity = Item.class,
-                mappedBy = "task",
-                cascade = CascadeType.ALL,
-                fetch = FetchType.LAZY
-        )
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
         private List<Item> items;
 }

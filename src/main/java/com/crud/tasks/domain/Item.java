@@ -32,7 +32,7 @@ public class Item {
     @Column(name = "VALUE")
     private BigDecimal value;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TASK_ID")
     private Task task;
 }

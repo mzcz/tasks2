@@ -1,26 +1,20 @@
 package com.crud.tasks.repository;
 
-import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskItemDto;
-import org.apache.commons.dbutils.DbUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Component;
+
+import com.mysema.query.Tuple;
+import com.mysema.query.jpa.impl.JPAQuery;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
 import javax.persistence.EntityManager;
 
-import javax.annotation.Resource;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.crud.tasks.domain.QItem.item;
+import static com.crud.tasks.domain.QTask.task;
+
 
 @Repository
 public class TaskItemRepository {
@@ -53,6 +47,25 @@ public class TaskItemRepository {
                " on t.id = i.task_id";
 
         return em.createNativeQuery(SearchQuery,TaskItemDto.class).getResultList();
+
+    };
+
+    @SuppressWarnings("unchecked")
+    public List<TaskItemDto>  retrieveTasksItemDto2(){
+
+        List<TaskItemDto>  listTaskItemDto = new ArrayList<>();
+        JPAQuery query = new JPAQuery(em);
+
+       final List<Tuple> myList =  query.from(item)
+               .join(item.task)
+               .list(item.task.id, item.task.title,item.quantity);
+
+        for(Tuple taskDto2 : myList){
+            listTaskItemDto.add(new TaskItemDto(taskDto2.get(item.task.id), taskDto2.get(item.task.title),
+                    taskDto2.get(item.quantity)));
+        }
+
+        return listTaskItemDto;
 
     };
 
